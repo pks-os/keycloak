@@ -11,37 +11,37 @@ import org.keycloak.test.framework.TestClient;
 import org.keycloak.test.framework.TestRealm;
 import org.keycloak.test.framework.TestUser;
 import org.keycloak.test.framework.injection.LifeCycle;
+import org.keycloak.test.framework.realm.DefaultClientConfig;
+import org.keycloak.test.framework.realm.DefaultRealmConfig;
+import org.keycloak.test.framework.realm.DefaultUserConfig;
 
 import java.util.List;
 
 @KeycloakIntegrationTest
-public class ManagedResourcesTest {
+public class GlobalManagedResourcesTest {
 
-    @TestRealm(lifecycle = LifeCycle.CLASS)
+    @TestRealm(lifecycle = LifeCycle.GLOBAL)
     RealmResource realmResource;
 
-    @TestClient
+    @TestClient(lifecycle = LifeCycle.GLOBAL)
     ClientResource clientResource;
 
-    @TestUser
+    @TestUser(lifecycle = LifeCycle.GLOBAL)
     UserResource userResource;
 
     @Test
     public void testCreatedRealm() {
-        Assertions.assertEquals(ManagedResourcesTest.class.getSimpleName(), realmResource.toRepresentation().getRealm());
+        Assertions.assertEquals(DefaultRealmConfig.class.getSimpleName(), realmResource.toRepresentation().getRealm());
     }
 
     @Test
     public void testCreatedClient() {
-        Assertions.assertEquals(ManagedResourcesTest.class.getSimpleName(), clientResource.toRepresentation().getClientId());
-
-        List<ClientRepresentation> clients = realmResource.clients().findByClientId(ManagedResourcesTest.class.getSimpleName());
-        Assertions.assertEquals(1, clients.size());
+        Assertions.assertEquals(DefaultClientConfig.class.getSimpleName(), clientResource.toRepresentation().getClientId());
     }
 
     @Test
     public void testCreatedUser() {
-        Assertions.assertEquals(ManagedResourcesTest.class.getSimpleName().toLowerCase(), userResource.toRepresentation().getUsername());
+        Assertions.assertEquals(DefaultUserConfig.class.getSimpleName().toLowerCase(), userResource.toRepresentation().getUsername());
     }
 
 }
